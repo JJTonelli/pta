@@ -1,7 +1,19 @@
 @extends('layouts.layout')
 
-@section('content')
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('.select-2').select2();
+    });
+</script>
+@endsection
 
+@section('content')
+    <style>
+        .link-pokemon:hover{
+            color:black;
+        }
+    </style>
     <div class="px-4 py-4">
         <form action="">
             <div class="row justify-content-center">
@@ -46,10 +58,19 @@
             <div class="row justify-content-center mt-2">
                 <div class="col-sm-2">
                     <label for="">Naturaleza</label>
-                    <select name="naturaleza" id="" class="form-select">
+                    <select name="naturaleza" id="" class="form-select select-2">
                         <option value="">Seleccionar naturaleza</option>
                         @foreach($naturalezas as $naturaleza)
                             <option value="{{$naturaleza->NaturalezaID}}" @selected($naturaleza->NaturalezaID == $naturalezaSeleccionada)>{{$naturaleza->Nombre}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <label for="">Especie</label>
+                    <select name="especie" id="" class="form-select select-2">
+                        <option value="">Seleccionar especie</option>
+                        @foreach($pokemonSelect as $pokemon)
+                            <option value="{{$pokemon->PokemonID}}" @selected($pokemon->PokemonID == $pokemonSeleccionado)>{{$pokemon->Nombre}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -72,7 +93,7 @@
             @foreach($pokemonesCollection as $pokemon)
                 <div class="col-sm-4 mb-2">
                     <div class="col-sm-12 border rounded my-4 card-pokemon" style="cursor: pointer">
-                        <a href="/pokemon/{{$pokemon->Numero}}" class="text-decoration-none d-flex flex-column">
+                        <a href="/pokemon/{{$pokemon->Numero}}" class="text-decoration-none d-flex flex-column link-pokemon">
                             <img class="mx-auto" src="{{$pokemon->Imagen}}" alt="" width="200px" height="200px">
                             <div class="row">
                                 <div class="col-12 text-center">
@@ -129,11 +150,48 @@
                                     <span>{{$pokemon->AtaqueEspecialTotal}}  (+{{ floor($pokemon->AtaqueEspecialTotal / 2)}})</span>
                                 </div>
                             </div>
+                            <hr>
+                        <div class="row mx-2">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <span>Habilidades</span>
+                                        @foreach($pokemon->habilidades as $habilidad)
+                                            <br>
+                                            <span class="fst-italic" data-bs-toggle="tooltip"
+                                                  data-bs-title="{{$habilidad->Efecto}}">{{$habilidad->Nombre}}</span>
+                                        @endforeach
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span>Pasivas</span>
+                                        @foreach($pokemon->pasivas as $pasiva)
+                                            <br>
+                                            <span class="fst-italic" data-bs-toggle="tooltip"
+                                                  data-bs-title="{{$pasiva->Descripcion}}">{{$pasiva->Titulo}}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                            <div class="row mx-2">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <span>Movimientos</span>
+                                            @foreach($pokemon->movimientos as $movimiento)
+                                                <br>
+                                                <span class="fst-italic" data-bs-toggle="tooltip"
+                                                      data-bs-title="{{$movimiento->Efecto}}">{{$movimiento->Nombre}} - {{$movimiento->Rango}} - {{$movimiento->Frecuencia}}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </a>
                     </div>
                 </div>
             @endforeach
         </div>
     </div>
-
 @endsection

@@ -66,7 +66,7 @@ class Pokemon extends Model
             $estadisticas = $estadisticas->where('Nombre', 'Defensa');
         })->get();
         foreach($defensaPasivas as $dp) {
-            foreach($dp->estadisticas as $e) {
+            foreach($dp->estadisticas->where('Nombre', 'Defensa') as $e) {
                 $defensaTotal += $e->pivot->Valor;
             }
         }
@@ -74,10 +74,10 @@ class Pokemon extends Model
         if($this->naturaleza) {
             $defensaNaturaleza = $this->naturaleza()->whereHas('estadisticas', function($estadisticas) {
                 $estadisticas = $estadisticas->where('Nombre', 'Defensa');
-            })->get();
+            })->first();
             if($defensaNaturaleza) {
-                foreach ($defensaNaturaleza as $df) {
-                    $defensaTotal += $df->estadisticas->where('Nombre', 'Defensa')->first()->pivot->Valor;
+                foreach ($defensaNaturaleza->estadisticas->where('Nombre', 'Defensa') as $df) {
+                    $defensaTotal += $df->pivot->Valor;
                 }
             }
         }
@@ -92,7 +92,7 @@ class Pokemon extends Model
             $estadisticas = $estadisticas->where('Nombre', 'Ataque');
         })->get();
         foreach($ataquePasivas as $dp) {
-            foreach($dp->estadisticas as $e) {
+            foreach($dp->estadisticas->where('Nombre', 'Ataque') as $e) {
                 $ataqueTotal += $e->pivot->Valor;
             }
         }
@@ -100,10 +100,10 @@ class Pokemon extends Model
         if($this->naturaleza) {
             $ataqueNaturaleza = $this->naturaleza()->whereHas('estadisticas', function($estadisticas) {
                 $estadisticas = $estadisticas->where('Nombre', 'Ataque');
-            })->get();
+            })->first();
             if($ataqueNaturaleza) {
-                foreach ($ataqueNaturaleza as $an) {
-                    $ataqueTotal += $an->estadisticas->where('Nombre', 'Ataque')->first()->pivot->Valor;
+                foreach ($ataqueNaturaleza->estadisticas->where('Nombre', 'Ataque') as $an) {
+                    $ataqueTotal += $an->pivot->Valor;
                 }
             }
         }
@@ -118,7 +118,7 @@ class Pokemon extends Model
             $estadisticas = $estadisticas->where('Nombre', 'AtaqueEspecial');
         })->get();
         foreach($ataquePasivas as $dp) {
-            foreach($dp->estadisticas as $e) {
+            foreach($dp->estadisticas->where('Nombre', 'AtaqueEspecial') as $e) {
                 $ataqueTotal += $e->pivot->Valor;
             }
         }
@@ -126,10 +126,10 @@ class Pokemon extends Model
         if($this->naturaleza) {
             $ataqueNaturaleza = $this->naturaleza()->whereHas('estadisticas', function($estadisticas) {
                 $estadisticas = $estadisticas->where('Nombre', 'AtaqueEspecial');
-            })->get();
+            })->first();
             if($ataqueNaturaleza) {
-                foreach ($ataqueNaturaleza as $an) {
-                    $ataqueTotal += $an->estadisticas->where('Nombre', 'AtaqueEspecial')->first()->pivot->Valor;
+                foreach ($ataqueNaturaleza->estadisticas->where('Nombre', 'AtaqueEspecial') as $an) {
+                    $ataqueTotal += $an->pivot->Valor;
                 }
             }
         }
@@ -144,7 +144,7 @@ class Pokemon extends Model
             $estadisticas = $estadisticas->where('Nombre', 'DefensaEspecial');
         })->get();
         foreach($defensaEspecialPasivas as $dp) {
-            foreach($dp->estadisticas as $e) {
+            foreach($dp->estadisticas->where('Nombre', 'DefensaEspecial') as $e) {
                 $defensaEspecialTotal += $e->pivot->Valor;
             }
         }
@@ -152,10 +152,10 @@ class Pokemon extends Model
         if($this->naturaleza) {
             $defensaEspecialNaturaleza = $this->naturaleza()->whereHas('estadisticas', function($estadisticas) {
                 $estadisticas = $estadisticas->where('Nombre', 'DefensaEspecial');
-            })->get();
+            })->first();
             if($defensaEspecialNaturaleza) {
-                foreach($defensaEspecialNaturaleza as $den) {
-                    $defensaEspecialTotal += $den->estadisticas->where('Nombre', 'DefensaEspecial')->first()->pivot->Valor;
+                foreach($defensaEspecialNaturaleza->estadisticas->where('Nombre', 'DefensaEspecial') as $den) {
+                    $defensaEspecialTotal += $den->pivot->Valor;
                 }
             }
         }
@@ -170,22 +170,20 @@ class Pokemon extends Model
             $estadisticas = $estadisticas->where('Nombre', 'Velocidad');
         })->get();
         foreach($velocidadPasivas as $dp) {
-            foreach($dp->estadisticas as $e) {
+            foreach($dp->estadisticas->where('Nombre', 'Velocidad') as $e) {
                 $velocidadTotal += $e->pivot->Valor;
             }
         }
-
         if($this->naturaleza) {
             $velocidadNaturaleza = $this->naturaleza()->whereHas('estadisticas', function($estadisticas) {
                 $estadisticas = $estadisticas->where('Nombre', 'Velocidad');
-            })->get();
+            })->first();
             if($velocidadNaturaleza) {
-                foreach ($velocidadNaturaleza as $v) {
-                    $velocidadTotal += $v->estadisticas->where('Nombre', 'Velocidad')->first()->pivot->Valor;
+                foreach ($velocidadNaturaleza->estadisticas->where('Nombre', 'Velocidad') as $v) {
+                    $velocidadTotal += $v->pivot->Valor;
                 }
             }
         }
-
         return $velocidadTotal;
     }
 }

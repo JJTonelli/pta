@@ -25,18 +25,26 @@ class GeneradorController extends Controller
             'cantidad' => 'nullable',
             'habitat' => 'nullable',
             'rareza' => 'nullable',
+            'especie' => 'nullable',
         ]);
 
         $tipo1 = $validated['tipo1'] ?? null;
         $tipo2 = $validated['tipo2'] ?? null;
+        $especie = $validated['especie'] ?? null;
         $naturalezaSeleccionada = $validated['naturaleza'] ?? null;
         $cantidad = $validated['cantidad'] ?? 5;
         $habitatSeleccionado = $validated['habitat'] ?? null;
         $rareza = $validated['rareza'] ?? null;
         $pokemonesCollection = collect();
+        $pokemonSelect = Pokemon::where('Gigantamax', null)
+            ->where('Mega', null)
+            ->where('Numero', '!=', null)
+            ->orderBy('Numero')->get();
 
         $pokemones = Pokemon::query();
-        $pokemones = $pokemones->when($tipo1, function($query) use($tipo1) {
+        $pokemones = $pokemones->when($especie, function($query) use($especie){
+            $query = $query->where('PokemonID', $especie);
+        })->when($tipo1, function($query) use($tipo1) {
             $query = $query->where('Tipo1ID', $tipo1);
         })->when($tipo2, function($query) use($tipo2) {
             $query = $query->where('Tipo2ID', $tipo2);
@@ -46,12 +54,19 @@ class GeneradorController extends Controller
             });
         })->when($rareza, function($query) use($rareza) {
             $query = $query->where('Rareza', $rareza);
-        })->inRandomOrder()->limit($cantidad)->get();
+        })->inRandomOrder()->get()->pluck('PokemonID')->toArray();
+//        ->with('naturaleza', 'tipo', 'estadisticas')
+        if($pokemones) {
+            for ($i = 0; $i < $cantidad; $i++) {
+                $pRand[] = array_rand($pokemones);
+            }
 
-        foreach ($pokemones as $pokemon) {
-            $pokemon->NaturalezaID = Naturaleza::inRandomOrder()->limit(1)->first()->NaturalezaID;
+            foreach($pRand as $p) {
+                $pokemon = Pokemon::with('naturaleza', 'tipo', 'estadisticas')->find($pokemones[$p]);
+                $pokemon->NaturalezaID = Naturaleza::inRandomOrder()->limit(1)->first()->NaturalezaID;
 
-            $pokemonesCollection->push($pokemon);
+                $pokemonesCollection->push($pokemon);
+            }
         }
 
         $tipos = Tipo::all();
@@ -68,6 +83,8 @@ class GeneradorController extends Controller
             'tipo1' => $tipo1,
             'tipo2' => $tipo2,
             'cantidad' => $cantidad,
+            'pokemonSelect' => $pokemonSelect,
+            'pokemonSeleccionado' => $especie,
         ]);
     }
 }
