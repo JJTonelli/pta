@@ -62,7 +62,7 @@ class GeneradorController extends Controller
             }
 
             foreach($pRand as $p) {
-                $pokemon = Pokemon::with('naturaleza', 'tipo', 'estadisticas')->find($pokemones[$p]);
+                $pokemon = Pokemon::find($pokemones[$p]);
                 $pokemon->NaturalezaID = Naturaleza::inRandomOrder()->limit(1)->first()->NaturalezaID;
 
                 $pokemonesCollection->push($pokemon);
