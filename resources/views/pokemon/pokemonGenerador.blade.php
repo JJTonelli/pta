@@ -179,6 +179,9 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <span>Movimientos</span>
+                                            <br>
+                                            <span>(Ataque +{{floor($pokemon->AtaqueTotal / 2)}}, Ataque Especial +{{floor($pokemon->AtaqueEspecialTotal / 2)}}, Efectos+{{floor($pokemon->VelocidadTotal / 2)}})</span>
+                                            <br>
                                             @foreach($pokemon->movimientos as $movimiento)
                                                 <br>
                                                 <span class="fst-italic" data-bs-toggle="tooltip"
